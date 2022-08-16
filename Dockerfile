@@ -34,7 +34,7 @@ RUN dnf install -y --setopt=install_weak_deps=False libglvnd-glx poppler-cpp zba
 COPY --from=python-build /wheels /wheels
 COPY --from=python-build /misp-modules-commit /home/misp-modules/
 
-RUN chown -R misp-modules:root /home/misp-modules/
+RUN chown -R misp-modules:misp-modules /home/misp-modules/
 
 USER misp-modules
 RUN pip3 --no-cache-dir install --no-warn-script-location --user /wheels/* sentry-sdk==1.5.1 && \
