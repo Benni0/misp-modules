@@ -27,14 +27,17 @@ RUN --mount=type=tmpfs,target=/tmp mkdir /tmp/source && \
 # Final image
 FROM base
 # Use system certificates for python requests library
-ENV REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-bundle.crt
+ENV HOME="/" \
+    REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-bundle.crt
 RUN dnf install -y --setopt=install_weak_deps=False libglvnd-glx poppler-cpp zbar && \
     rm -rf /var/cache/dnf && \
     useradd --create-home --system --user-group misp-modules
 COPY --from=python-build /wheels /wheels
 COPY --from=python-build /misp-modules-commit /home/misp-modules/
 
-RUN chown -R misp-modules:misp-modules /home/misp-modules/
+RUN chmod g+rwX /home/misp-modules
+
+RUN chown -R misp-modules:root /home/misp-modules
 RUN chmod -R 777 /home/misp-modules/
 
 USER misp-modules
