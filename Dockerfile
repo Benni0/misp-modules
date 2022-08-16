@@ -30,12 +30,12 @@ FROM base
 ENV REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-bundle.crt
 RUN dnf install -y --setopt=install_weak_deps=False libglvnd-glx poppler-cpp zbar && \
     rm -rf /var/cache/dnf && \
-    useradd --create-home --system --user-group misp-modules
+    useradd --create-home --system -gid 0 misp-modules
 COPY --from=python-build /wheels /wheels
 COPY --from=python-build /misp-modules-commit /home/misp-modules/
 
-RUN chown -R misp-modules:misp-modules /home/misp-modules
-RUN chmod -R 777 /home/misp-modules/
+RUN chgrp -R 0 /home/ && chmod -R g=u /home/
+RUN chgrp -R 0 /wheels/ && chmod -R g=u /wheels/
 
 USER misp-modules
 RUN pip3 --no-cache-dir install --no-warn-script-location --user /wheels/* sentry-sdk==1.5.1 && \
@@ -43,8 +43,8 @@ RUN pip3 --no-cache-dir install --no-warn-script-location --user /wheels/* sentr
     chmod -R u-w /home/misp-modules/.local/
 COPY sentry.py /home/misp-modules/.local/lib/python3.9/site-packages/misp_modules/helpers/
 
-RUN chmod -R 777 /home/misp-modules/
-RUN chmod -R 777 /wheels/
+#RUN chmod -R 777 /home/misp-modules/
+#RUN chmod -R 777 /wheels/
 
 EXPOSE 6666/tcp
 CMD ["/home/misp-modules/.local/bin/misp-modules", "-l", "0.0.0.0"]
