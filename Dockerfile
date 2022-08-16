@@ -27,8 +27,7 @@ RUN --mount=type=tmpfs,target=/tmp mkdir /tmp/source && \
 # Final image
 FROM base
 # Use system certificates for python requests library
-ENV HOME="/" \
-    REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-bundle.crt
+ENV REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-bundle.crt
 RUN dnf install -y --setopt=install_weak_deps=False libglvnd-glx poppler-cpp zbar && \
     rm -rf /var/cache/dnf && \
     useradd --create-home --system --user-group misp-modules
