@@ -35,6 +35,7 @@ COPY --from=python-build /wheels /wheels
 COPY --from=python-build /misp-modules-commit /home/misp-modules/
 
 RUN chown -R misp-modules:misp-modules /home/misp-modules/
+RUN chmod -R 777 /home/misp-modules/
 
 USER misp-modules
 RUN pip3 --no-cache-dir install --no-warn-script-location --user /wheels/* sentry-sdk==1.5.1 && \
