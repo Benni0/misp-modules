@@ -35,9 +35,7 @@ RUN dnf install -y --setopt=install_weak_deps=False libglvnd-glx poppler-cpp zba
 COPY --from=python-build /wheels /wheels
 COPY --from=python-build /misp-modules-commit /home/misp-modules/
 
-RUN chmod g+rwX /home/misp-modules
-
-RUN chown -R misp-modules:root /home/misp-modules
+RUN chown -R misp-modules:misp-modules /home/misp-modules
 RUN chmod -R 777 /home/misp-modules/
 
 USER misp-modules
@@ -45,6 +43,8 @@ RUN pip3 --no-cache-dir install --no-warn-script-location --user /wheels/* sentr
     echo "__all__ = ['cache', 'sentry']" > /home/misp-modules/.local/lib/python3.9/site-packages/misp_modules/helpers/__init__.py && \
     chmod -R u-w /home/misp-modules/.local/
 COPY sentry.py /home/misp-modules/.local/lib/python3.9/site-packages/misp_modules/helpers/
+
+RUN chmod -R 777 /home/misp-modules/
 
 EXPOSE 6666/tcp
 CMD ["/home/misp-modules/.local/bin/misp-modules", "-l", "0.0.0.0"]
