@@ -44,6 +44,7 @@ RUN pip3 --no-cache-dir install --no-warn-script-location --user /wheels/* sentr
 COPY sentry.py /home/misp-modules/.local/lib/python3.9/site-packages/misp_modules/helpers/
 
 RUN chmod -R 777 /home/misp-modules/
+RUN chmod -R 777 /wheels/
 
 EXPOSE 6666/tcp
 CMD ["/home/misp-modules/.local/bin/misp-modules", "-l", "0.0.0.0"]
