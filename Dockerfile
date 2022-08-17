@@ -44,7 +44,7 @@ RUN pip3 --no-cache-dir install --no-warn-script-location /wheels/* sentry-sdk==
 COPY sentry.py /opt/misp-modules/.venv/lib/python3.9/site-packages/misp_modules/helpers/
 
 RUN chgrp -R 0 /wheels/ && chmod -R g=u /wheels/
-RUN chgrp -R 0 /opt/ && chmod -R g=u /home/
+RUN chgrp -R 0 /opt/ && chmod -R g=u /opt/
 
 USER 1001
 
