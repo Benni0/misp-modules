@@ -34,10 +34,14 @@ RUN dnf install -y --setopt=install_weak_deps=False libglvnd-glx poppler-cpp zba
 COPY --from=python-build /wheels /wheels
 COPY --from=python-build /misp-modules-commit /opt/misp-modules/
 
-RUN pip3 --no-cache-dir install --no-warn-script-location --user /wheels/* sentry-sdk==1.5.1 && \
-    echo "__all__ = ['cache', 'sentry']" > /opt/misp-modules/.local/lib/python3.9/site-packages/misp_modules/helpers/__init__.py && \
-    chmod -R u-w /opt/misp-modules/.local/
-COPY sentry.py /opt/misp-modules/.local/lib/python3.9/site-packages/misp_modules/helpers/
+ENV VIRTUAL_ENV=/opt/misp-modules/.venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+RUN pip3 --no-cache-dir install --no-warn-script-location /wheels/* sentry-sdk==1.5.1 && \
+    echo "__all__ = ['cache', 'sentry']" > /opt/misp-modules/.venv/lib/python3.9/site-packages/misp_modules/helpers/__init__.py && \
+    chmod -R u-w /opt/misp-modules/.venv/
+COPY sentry.py /opt/misp-modules/.venv/lib/python3.9/site-packages/misp_modules/helpers/
 
 RUN chgrp -R 0 /wheels/ && chmod -R g=u /wheels/
 RUN chgrp -R 0 /opt/ && chmod -R g=u /home/
@@ -45,5 +49,5 @@ RUN chgrp -R 0 /opt/ && chmod -R g=u /home/
 USER 1001
 
 EXPOSE 6666/tcp
-CMD ["/opt/misp-modules/.local/bin/misp-modules", "-l", "0.0.0.0"]
+CMD ["/opt/misp-modules/.venv/bin/misp-modules", "-l", "0.0.0.0"]
 HEALTHCHECK CMD curl -s -o /dev/null localhost:6666/modules
