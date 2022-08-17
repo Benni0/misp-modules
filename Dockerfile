@@ -28,7 +28,7 @@ RUN --mount=type=tmpfs,target=/tmp mkdir /tmp/source && \
 FROM base
 # Use system certificates for python requests library
 ENV REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-bundle.crt
-RUN dnf install -y --setopt=install_weak_deps=False libglvnd-glx poppler-cpp zbar ssdeep-devel && \
+RUN dnf install -y --setopt=install_weak_deps=False libglvnd-glx poppler-cpp zbar ssdeep-devel ssdeep-libs && \
     rm -rf /var/cache/dnf && \
     mkdir /opt/misp-modules/
 COPY --from=python-build /wheels /wheels
