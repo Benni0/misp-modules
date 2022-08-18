@@ -21,8 +21,10 @@ RUN --mount=type=tmpfs,target=/tmp mkdir /tmp/source && \
     git config --system http.sslVersion tlsv1.3 && \
     COMMIT=$(git ls-remote https://github.com/MISP/misp-modules.git $MISP_MODULES_VERSION | cut -f1) && \
     curl --proto '=https' --tlsv1.3 --fail -sSL https://github.com/MISP/misp-modules/archive/$COMMIT.tar.gz | tar zx --strip-components=1 && \
+    cat REQUIREMENTS && \
     pip3 --no-cache-dir wheel --wheel-dir /wheels -r REQUIREMENTS && \
-    echo $COMMIT > /misp-modules-commit
+    echo $COMMIT > /misp-modules-commit && \
+    ls /misp-modules-commit
 
 # Final image
 FROM base
