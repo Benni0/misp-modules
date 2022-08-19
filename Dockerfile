@@ -47,7 +47,7 @@ COPY sentry.py /opt/misp-modules/.venv/lib/python3.9/site-packages/misp_modules/
 RUN chgrp -R 0 /wheels/ && chmod -R g=u /wheels/
 RUN chgrp -R 0 /opt/ && chmod -R g=u /opt/
 
-#USER 1001
+USER 1001
 
 EXPOSE 6666/tcp
 CMD ["/opt/misp-modules/.venv/bin/misp-modules", "-l", "0.0.0.0"]
